@@ -1,0 +1,14 @@
+{
+  "name": "andrade-custom-trim-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sitio web bilingüe de Andrade Custom Trim",
+  "type": "module",
+  "scripts": {
+    "dev": "node andrade-site/dev.mjs",
+    "build": "node andrade-site/build.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
