@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "node andrade-site/dev.mjs",
     "build": "node andrade-site/build.mjs",
-    "zip": "node andrade-site/build.mjs && tar -a -cf andrade-hostinger.zip -C andrade-site/dist ."
+    "zip": "node andrade-site/build.mjs && node andrade-site/zip.mjs andrade-hostinger.zip"
   },
   "engines": {
     "node": ">=18"
