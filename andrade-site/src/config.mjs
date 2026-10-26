@@ -2,8 +2,8 @@
 
 export const SITE_URL = "https://andradecustomtrim.com";
 
-// Photos under /img/ live in src/img/ (taken from the client proposal PDF). Any other path still
-// loads from the current live site; copy those files into src/img/ before the old site is replaced.
+// All photos live in src/img/ (proposal photos from the client PDF + portfolio photos copied from the old site).
+// Paths that do not start with /img/ load from IMG_BASE (only used as a fallback).
 export const IMG_BASE = "https://andradecustomtrim.com";
 
 // Form service (Formspree, Web3Forms, Basin…). Leave empty to fall back to the visitor's email app.
@@ -70,16 +70,16 @@ export const PROJECTS = [
   { cat: "trim", src: "/img/baseboard-corner-detail.webp", en: "Baseboard corner detail", es: "Detalle de zócalo en esquina" },
   { cat: "trim", src: "/img/floating-wood-shelves.webp", en: "Floating wood shelves", es: "Repisas flotantes de madera", featured: true },
   { cat: "trim", src: "/img/fireplace-mantel-surround.webp", en: "Fireplace mantel & surround", es: "Marco de chimenea" },
-  { cat: "closets", src: "/projects/luxury-walk-in-closet-island-white-oak-built-ins.jpg", en: "White oak closet island & built-ins", es: "Isla y muebles integrados de roble blanco" },
-  { cat: "closets", src: "/projects/luxury-walk-in-closet-island-with-integrated-lighting.jpeg", en: "Closet island with integrated lighting", es: "Isla de clóset con iluminación integrada" },
-  { cat: "closets", src: "/projects/hidden-bookshelf-door-secret-room-custom-white-closet.jpg", en: "Hidden bookshelf door & walk-in closet", es: "Puerta librero oculta y clóset vestidor" },
-  { cat: "closets", src: "/projects/custom-walk-in-closet-white-drawers-gold-knobs.jpg", en: "White walk-in with brass hardware", es: "Vestidor blanco con herrajes de latón" },
-  { cat: "closets", src: "/projects/luxury-custom-closet-vanity-with-lighted-mirror-and-built-in-storage.jpeg", en: "Makeup vanity & storage system", es: "Tocador con espejo iluminado y almacenamiento" },
-  { cat: "closets", src: "/projects/custom-taupe-closet-drawers-with-polished-gold-hardware.jpeg", en: "Taupe closet with soft-close drawers", es: "Clóset color topo con cajones de cierre suave" },
-  { cat: "cabinets", src: "/projects/img27.webp", en: "Modern kitchen cabinetry & island", es: "Cocina moderna con isla" },
-  { cat: "cabinets", src: "/projects/custom-mudroom-lockers-built-in-bench-gray-cabinetry.jpg", en: "Mudroom lockers with built-in bench", es: "Lockers de entrada con banca integrada" },
-  { cat: "cabinets", src: "/projects/luxury-laundry-room-stacked-washer-dryer-marble-tile.jpg", en: "Laundry room cabinetry", es: "Gabinetes de lavandería" },
-  { cat: "trim", src: "/projects/dark-green-accent-wall-picture-frame-molding-office.jpeg", en: "Deep green picture-frame molding", es: "Molduras tipo marco en verde profundo" },
-  { cat: "trim", src: "/projects/light-blue-board-and-batten-wainscoting-bedroom.jpeg", en: "Board & batten bedroom accent", es: "Revestimiento board & batten en recámara" },
-  { cat: "ceilings", src: "/projects/open-concept-living-room-white-coffered-ceiling-beams.jpeg", en: "Coffered ceiling beams", es: "Techo artesonado con vigas" }
+  { cat: "closets", src: "/img/luxury-walk-in-closet-island-white-oak-built-ins.webp", en: "White oak closet island & built-ins", es: "Isla y muebles integrados de roble blanco" },
+  { cat: "closets", src: "/img/luxury-walk-in-closet-island-with-integrated-lighting.webp", en: "Closet island with integrated lighting", es: "Isla de clóset con iluminación integrada" },
+  { cat: "closets", src: "/img/hidden-bookshelf-door-secret-room-custom-white-closet.webp", en: "Hidden bookshelf door & walk-in closet", es: "Puerta librero oculta y clóset vestidor" },
+  { cat: "closets", src: "/img/custom-walk-in-closet-white-drawers-gold-knobs.webp", en: "White walk-in with brass hardware", es: "Vestidor blanco con herrajes de latón" },
+  { cat: "closets", src: "/img/luxury-custom-closet-vanity-with-lighted-mirror-and-built-in-storage.webp", en: "Makeup vanity & storage system", es: "Tocador con espejo iluminado y almacenamiento" },
+  { cat: "closets", src: "/img/custom-taupe-closet-drawers-with-polished-gold-hardware.webp", en: "Taupe closet with soft-close drawers", es: "Clóset color topo con cajones de cierre suave" },
+  { cat: "cabinets", src: "/img/modern-kitchen-island.webp", en: "Modern kitchen cabinetry & island", es: "Cocina moderna con isla" },
+  { cat: "cabinets", src: "/img/custom-mudroom-lockers-built-in-bench-gray-cabinetry.webp", en: "Mudroom lockers with built-in bench", es: "Lockers de entrada con banca integrada" },
+  { cat: "cabinets", src: "/img/luxury-laundry-room-stacked-washer-dryer-marble-tile.webp", en: "Laundry room cabinetry", es: "Gabinetes de lavandería" },
+  { cat: "trim", src: "/img/dark-green-accent-wall-picture-frame-molding-office.webp", en: "Deep green picture-frame molding", es: "Molduras tipo marco en verde profundo" },
+  { cat: "trim", src: "/img/light-blue-board-and-batten-wainscoting-bedroom.webp", en: "Board & batten bedroom accent", es: "Revestimiento board & batten en recámara" },
+  { cat: "ceilings", src: "/img/open-concept-living-room-white-coffered-ceiling-beams.webp", en: "Coffered ceiling beams", es: "Techo artesonado con vigas" }
 ];

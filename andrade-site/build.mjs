@@ -411,4 +411,46 @@ ${["en", "es"].flatMap((lang) => PAGES.map((p) => `  <url><loc>${SITE_URL + path
 `);
 write("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 
+// Apache / LiteSpeed (Hostinger) settings: HTTPS, canonical host, 404 page, caching, compression.
+const host = new URL(SITE_URL).host;
+write(".htaccess", `Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Force HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://${host}%{REQUEST_URI} [L,R=301]
+  # www → ${host}
+  RewriteCond %{HTTP_HOST} ^www\\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+  # Old URLs from the previous site
+  RewriteRule ^home/?$ / [L,R=301]
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+  AddType image/avif .avif
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/xml text/plain image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 hour"
+  ExpiresByType text/html "access plus 0 seconds"
+  # CSS/JS links carry ?v=<build> so they can be cached for a year
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+</IfModule>
+`);
+
 console.log("Built", PAGES.length * 2 + 1, "pages → dist/");
