@@ -24,17 +24,28 @@ function build() {
   return r.status === 0;
 }
 
+const isFile = (f) => stat(f).then((s) => s.isFile(), () => false);
+const isDir = (f) => stat(f).then((s) => s.isDirectory(), () => false);
+
+// Same rules as the .htaccess on Hostinger: /about → about.html, folders → index.html.
 async function resolve(urlPath) {
   const safe = normalize(decodeURIComponent(urlPath)).replace(/^(\.\.[\\/])+/, "");
-  let file = join(DIST, safe);
+  const file = join(DIST, safe);
   if (!file.startsWith(DIST)) return null;
-  try {
-    if ((await stat(file)).isDirectory()) file = join(file, "index.html");
-    await stat(file);
-    return file;
-  } catch {
-    return null;
-  }
+  if (await isFile(file)) return file;
+  if (await isDir(file) && (await isFile(join(file, "index.html")))) return join(file, "index.html");
+  if (await isFile(file + ".html")) return file + ".html";
+  return null;
+}
+
+// Redirects that keep a single URL per page (mirrors .htaccess).
+async function redirectFor(pathname) {
+  if (/\/index\.html$/.test(pathname)) return pathname.replace(/index\.html$/, "");
+  if (pathname.endsWith(".html") && pathname !== "/404.html") return pathname.slice(0, -5);
+  const file = join(DIST, normalize(decodeURIComponent(pathname)));
+  if (pathname.length > 1 && pathname.endsWith("/") && !(await isDir(file))) return pathname.slice(0, -1);
+  if (!pathname.endsWith("/") && (await isDir(file))) return pathname + "/";
+  return null;
 }
 
 const server = createServer(async (req, res) => {
@@ -46,12 +57,12 @@ const server = createServer(async (req, res) => {
     req.on("close", () => clients.delete(res));
     return;
   }
-  // Folder URLs without a trailing slash → redirect, like most static hosts do.
-  const file = await resolve(pathname);
-  if (file && !pathname.endsWith("/") && !extname(pathname) && file.endsWith("index.html")) {
-    res.writeHead(301, { Location: pathname + "/" });
+  const location = await redirectFor(pathname);
+  if (location) {
+    res.writeHead(301, { Location: location + new URL(req.url, "http://localhost").search });
     return res.end();
   }
+  const file = await resolve(pathname);
   const target = file || join(DIST, "404.html");
   try {
     let body = await readFile(target);

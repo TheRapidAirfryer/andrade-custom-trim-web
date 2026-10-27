@@ -14,10 +14,10 @@ const VER = Date.now().toString(36); // cache-busting for CSS/JS after each buil
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const src = (p) => (/^https?:/.test(p) || p.startsWith("/img/") ? p : IMG_BASE + p);
 const abs = (p) => (p.startsWith("/img/") ? SITE_URL + p : src(p));
-const path = (lang, page) => {
-  const slug = SLUGS[lang][page];
-  return (lang === "en" ? "/" : "/es/") + (slug ? slug + "/" : "");
-};
+// Clean URLs without trailing slash: /about, /es/servicios. Home pages are / and /es/.
+const path = (lang, page) => (lang === "en" ? "/" : "/es/") + (SLUGS[lang][page] || "");
+// File behind each URL: /about → about.html, / → index.html, /es/ → es/index.html
+const fileFor = (lang, page) => (SLUGS[lang][page] ? path(lang, page) + ".html" : join(path(lang, page), "index.html"));
 const img = (p, alt, { w, h, eager = false, cls = "", sizes } = {}) =>
   `<img src="${esc(src(p))}" alt="${esc(alt)}"${w ? ` width="${w}" height="${h}"` : ""}${eager ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async"${cls ? ` class="${cls}"` : ""}${sizes ? ` sizes="${sizes}"` : ""}>`;
 const mapsLink = `https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`;
@@ -392,7 +392,7 @@ const write = (rel, html) => {
 for (const lang of ["en", "es"]) {
   const t = T[lang];
   for (const page of PAGES) {
-    write(join(path(lang, page), "index.html"), head(t, page, lang) + header(t, page, lang) + RENDER[page](t, lang) + footer(t, lang));
+    write(fileFor(lang, page), head(t, page, lang) + header(t, page, lang) + RENDER[page](t, lang) + footer(t, lang));
   }
 }
 write("404.html", head(T.en, "404", "en") + header(T.en, "404", "en") + notFound(T.en, "en") + footer(T.en, "en"));
@@ -428,6 +428,19 @@ ErrorDocument 404 /404.html
   RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
   # Old URLs from the previous site
   RewriteRule ^home/?$ / [L,R=301]
+  # /about.html → /about  and  /es/index.html → /es/
+  RewriteCond %{THE_REQUEST} \\s/+(.*/)?index\\.html[\\s?] [NC]
+  RewriteRule ^ /%1 [L,R=301]
+  RewriteCond %{THE_REQUEST} \\s/+([^?\\s]+)\\.html[\\s?] [NC]
+  RewriteRule ^ /%1 [L,R=301]
+  # /about/ → /about  (trailing slash only for real folders like /es/)
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+)/$ /$1 [L,R=301]
+  # Serve /about from about.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.+)$ /$1.html [L]
 </IfModule>
 
 <IfModule mod_mime.c>
